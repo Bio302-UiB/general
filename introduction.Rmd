@@ -1,0 +1,208 @@
+---
+title: "Introduction"
+subtitle: Bio302 2020
+author: Richard J. Telford
+output:
+  ioslides_presentation:
+    widescreen: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## The way we do data analysis for biology is changing
+
+**Major drivers**
+
+1. Reproducibility crisis
+
+2. Open Science
+
+3. New computional tools
+
+4. New statistical methods
+
+This course aims to teach you how to use some of the new tools and statistical methods
+
+# The Reproducibility Crisis
+
+## Most scientists 'can't replicate studies by their peers'
+
+### Read
+
+- [Most scientists 'can't replicate studies by their peers'](http://www.bbc.com/news/science-environment-39054778)
+- [Ioannidis 2005. Why Most Published Research Findings Are False](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1182327/)
+
+- [Bishop 2019. Rein in the four horsemen of irreproducibility](https://www.nature.com/articles/d41586-019-01307-2)
+
+### Questions
+
+
+- What is reproducibility?
+- Why are papers non-reproducible?
+- What is the role of statistics in reproducible analyses
+
+
+[What does research reproducibility mean?](http://stm.sciencemag.org/content/8/341/341ps12.full) 
+
+## Why
+
+- Bad luck
+  -  False Discovery
+
+- Questionable research practices
+  - cherry picking
+  - HARKING (hypothesising after results known)
+  - p-Hacking
+
+- Misconduct
+  - Fabrication, Falsification
+
+Which of these do you think is most important?
+
+
+## Misuse of p-values
+
+P-values often misinterpreted
+
+-    Not a measure of effect size or practical significance
+-    Not the probability that hypothesis is true
+-    Strongly affected by sample size
+
+>If there were actually no effect (if the true difference between means were zero) then the probability of observing a value for the difference equal to, or greater than, that actually observed would be p=0.05.
+
+Many assumptions
+
+
+### Read
+
+[https://www.nature.com/articles/d41586-019-00857-9](https://www.nature.com/articles/d41586-019-00857-9)
+
+
+
+## Multiple testing
+
+```{r out.width = 300}
+knitr::include_graphics("https://imgs.xkcd.com/comics/significant.png", )
+```
+
+
+## False discovery
+
+```{r out.width=400}
+knitr::include_graphics("https://imgs.xkcd.com/comics/frequentists_vs_bayesians.png")
+```
+
+
+##
+
+### Read
+
+[Colquhoun 2014. An investigation of the false discovery rate and the misinterpretation of p-values](https://royalsocietypublishing.org/doi/full/10.1098/rsos.140216)
+
+> If you use p=0.05 to suggest that you have made a discovery, you will be wrong at least 30% of the time. If, as is often the case, experiments are underpowered, you will be wrong most of the time
+
+```{r out.width=400}
+knitr::include_graphics("https://royalsocietypublishing.org/cms/attachment/07568509-44a9-46a5-beab-65000fa05dae/rsos140216f01.jpg")
+```
+
+
+## Questionable research practice
+
+### Read 
+
+[Fraser et al 2018. Questionable research practices in ecology and evolution](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0200303)
+
+### Question
+
+What are HARKING and p-hacking. Why do they make studies non-reproducible.
+
+# What about some solutions
+
+## Open Science
+
+```{r}
+knitr::include_graphics("https://www.fosteropenscience.eu/sites/default/files/images/OpenScienceBuildingBlocks.JPG")
+```
+
+Not just open access publication
+
+Transparency throughout the scientific process
+
+More on [Open Science](https://book.fosteropenscience.eu/en/)
+
+
+## Before your experiment
+
+- Design your experiment around the statistical methods you want to use
+- Trying to choose statistical methods after you have the results is sub-optimal
+
+- Power analysis
+- Do you have enough replication to detect an interesting response?
+- Simulations can help
+
+- Registered report
+
+## Registered reports
+
+- Introduction and methods written and submitted before data gathered
+- Manuscript accepted/rejected on basis on importance of idea and validity of methods
+- Acceptance not influenced by "significance" of results
+- Reduces publication bias (non-significant results often not published)
+- Reduces scope for p-hacking and HARKING
+
+
+### Read 
+[What’s next for Registered Reports?](https://www.nature.com/articles/d41586-019-02674-6)
+
+### Questions
+
+- Could you do a registered report for your thesis?
+- What challenges do you predict?
+
+## Tools for reproducible science in Bio302
+
+### Data handling with code
+All data cleaning, formatting, processing and analysis should be done with code 
+
+### Version control with git and github
+Version control is an important tool for managing code
+
+### Reproducible reports with rmarkdown
+Write your thesis/manuscripts in rmarkdown so that figures tables are generated automatically
+
+## Statistical tools covered in Bio302
+
+-    Exploratory data analysis
+-    Linear regression
+-    Analysis of variance with contrast matrices
+-    Generalised least-squares
+-    Non-linear least-squares
+-    Generalised linear models
+-    Generalised additive models
+-    Mixed effect models
+-    Introduction to Bayesian analysis
+
+## Practicals
+
+Practicals on [Rstudio cloud](https://rstudio.cloud/spaces/68367/join?access_code=QfwXGytZkecRvZtS26bbnznwLirOV0UrATyF0eYl)
+
+ - Behaves just like Rstudio and R on your own machine
+ - No installation problems
+ - All packages needed already installed
+
+
+## Further Reading 
+
+- [British Ecological Society Guide to Reproducible Code](https://www.britishecologicalsociety.org/wp-content/uploads/2019/06/BES-Guide-Reproducible-Code-2019.pdf)
+
+- [British Ecological Society Guide to Data Management](https://www.britishecologicalsociety.org/wp-content/uploads/2019/06/BES-Guide-Data-Management-2019.pdf)
+
+- Gillespie, C and Lovelace, R (2016) Efficient R programming. https://github.com/csgillespie/efficientR
+- Zuur AF et al (2009) Mixed effects models and extensions in ecology with R. Springer.
+- Grolemund & Wickham (2017) R for data science [https://r4ds.had.co.nz/](https://r4ds.had.co.nz/)
+
+
+
+
