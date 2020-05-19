@@ -83,8 +83,8 @@ Many assumptions
 
 ## Multiple testing
 
-```{r out.width = 300}
-knitr::include_graphics("https://imgs.xkcd.com/comics/significant.png", )
+```{r out.width = 220}
+knitr::include_graphics("https://imgs.xkcd.com/comics/significant.png")
 ```
 
 
