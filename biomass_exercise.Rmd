@@ -1,0 +1,97 @@
+---
+title: "Issues with biomass exercise code"
+output: html_document
+numbersections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+I looked at many of your projects - appogies if I accidentally knocked your connection out.
+
+Generally nicely commented code with good white space. Some very good solutions (but I still have suggestions for improvements). Here are some issues that I saw in some of the projects.
+
+# No import code
+
+Without code to import the data, the code cannot be reproducible.
+
+# Setting working directory
+
+It is almost never useful to set the working directory with `setwd()`.
+
+- Use Rstudio projects (working directory is automatically set to project root)
+- Use relative paths (`data/biomass2015.xlsx`)
+- Best solution is to use `here::here()` (`here("data", "biomass2015.xlsx")`)
+
+# Changing data format
+
+Bad idea converting data formats. Risk of introducing errors (eg. excel converting things to dates). Need to repeat any processing if there is a new version of the data. Always try to import the data in its original format.
+
+# Repetitive data import
+
+```{r, repeat-import, eval = FALSE}
+library("readxl")
+H <- read_excel("data/biomass2015.xls", sheet = "Site H")
+A <- read_excel("data/biomass2015.xls", sheet = "Site A")
+M <- read_excel("data/biomass2015.xls", sheet = "Site M")
+
+```
+
+- Error prone - easy to assign the wrong sheet to an object.
+- Doesn't scale. Sort of works for 4 sheets. Imagine having 40 to import.
+- Much better to iterate over the sheets
+
+```{r, eval = FALSE}
+datafile <- "data/biomass2015.xlsx"
+excel_sheets(datafile) %>%
+  purrr::map_df(~ read_excel(datafile, sheet = .x))
+```
+
+# Keeping the data frames separate
+
+When compatible data frames are imported, it is almost always better to combine them into one large data frame for further processing. This stops you needing to write repetative code to process each data frame separately.
+
+```{r}
+bind_rows(H, A, M, L)
+```
+
+`bind_rows` is more powerful and safer than `rbind`.
+
+`group_by` can then be used to process the data in sections
+
+# Don't split the data up
+
+Sometimes it seems like a good idea to break one data frame into many small data frames to process. It rarely, perhaps never, is. `group_by` followed by `summarise` is a much more powerful solution. 
+
+Key point: Don't repeat yourself. Leads to long and difficult to maintain code.
+
+# select by column number
+
+It is quite legal to select columns by column number, but it is not very safe. One problem is that if code is accidently run twice, weird things can happen
+
+```{r}
+myiris <- iris
+myiris <- myiris %>% select(-1)
+myiris <- myiris %>% select(-1)
+```
+
+
+
+# loops
+
+Explicit loops (`for`) are rarely the best solution unless programming a simulation where each iteration depends on the last (even here there may be better solutions). I hardly ever use them. The optimal solution depends on the context, but `group_by` followed by `summarise` can be good if the data are in a data frame. `purrr::map` is good for data in lists.
+
+# Plot against site
+
+Some plots were cover against plot, rather than site. This makes it difficult to see any pattern along the gradient.
+
+A boxplot is the obvious choice to plot cover against site
+
+```{r}
+ggplot(biomass, aes(x = Site, y = cover)) +
+         geom_boxplot() 
+```
+
+
+
