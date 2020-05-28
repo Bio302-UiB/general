@@ -232,9 +232,9 @@ $S_{xy} = \frac{\Sigma (x_i - \mu_x)(y_i - \mu_y)}{n - 1}$
 
 $S_{xy} = S_{yx}$
 
-- -inf, 0, +inf
-– + = positive association
-- - = negative association
+- \-inf, 0, +inf
+- \+ = positive association
+- \- = negative association
 
 ```{r}
 var(iris$Sepal.Length, iris$Sepal.Width)
@@ -245,9 +245,9 @@ cov(iris$Sepal.Length, iris$Sepal.Width)
 
 Standardised association
 
-- -1, 0, +1
-- + = positive association
-- - = negative association
+- \-1, 0, +1
+- \+ = positive association
+- \- = negative association
 
 - $S_{xy}$ - covariance 
 - $S_x^2$ - variance of x
