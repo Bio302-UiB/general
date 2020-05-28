@@ -186,7 +186,7 @@ nrep = 100
 control <- crossing(rep_no = 1:nrep, n = seq(10, 100, 20)) 
 
 runs <- control %>%
-  pmap_df(sim_t_test, delta = 1, sd = 2) %>% 
+  pmap_df(~sim_t_test(n = n, delta = 1, sd = 2, nrep = nrep))  %>% 
   mutate(sig = p.value <= 0.05)
 
 p <- runs  %>%
