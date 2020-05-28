@@ -1,0 +1,44 @@
+---
+title: "EDA practical"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We are going to use the iris data in this practical.
+
+## Plotting data
+
+Use `ggplot` to make a plot showing the distribution of petal widths for the three species.
+
+There are several valid ways to do this. Some possibly useful geoms include
+
+```{r, eval = FALSE}
+geom_histogram
+geom_density
+geom_boxplot
+geom_violin
+geom_jitter
+ggforce::geom_sina # you will need to install the package
+```
+
+Remember, you can use several geoms together.
+
+Choose a plot that you think best represents the data.
+
+
+## Univariate summary statistics
+
+Calculate the mean and standard deviation for petal width for each species. `dplyr::summarise` might be useful.
+
+## Bivariate analyses
+
+Use `GGally::ggpairs` to plot all variables in the iris data against each other.
+
+Find the covariance between sepal length and petal length for each species.
+
+Calculate the correlation between sepal length and petal length from the covariance and variance. Check this matches the correlation calculated directly with `cor`.
+
+Are the correlations significant for each species? Again, you can do this with `summarise`, with `cor.test` help from `broom::tidy`.

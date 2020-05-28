@@ -1,0 +1,307 @@
+---
+title: "Exploratory Data Analysis"
+author: Richard J. Telford
+output: ioslides_presentation
+---
+
+<style>
+.forceBreak { -webkit-column-break-after: always; break-after: column; }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("tidyverse")
+library("patchwork")
+theme_set(theme_bw())
+```
+
+## Exploratory Data Analysis
+
+Distinct from confirmatory data analysis
+
+Range of predominantly graphical tools
+
+- Hypotheses generation
+- Outlier detection
+- Suggest appropriate data transformations
+
+Essential first step of any analysis
+
+## Exploratory + Confirmatory Analysis
+
+- Risk of data dredging
+
+  - Searching for interesting patterns then testing if they are statistically significant   
+  - Raised risk of falsely finding statistically significant result  
+  
+- Well designed study has two phases  
+  - Gather small initial data set   
+  - Use exploratory data analysis on initial dataset to determine features of interest and statistical protocol  
+  - Gather new data and test hypotheses with protocol developed in first phase  
+  - Can also split large dataset into two parts 
+  
+# Univariate EDA  
+  
+  
+## Summarising data
+
+Distribution - the shape of the data
+
+```{r, echo = FALSE, message = FALSE}
+hist <- ggplot(iris, aes(x = Sepal.Length)) +
+  geom_histogram(bins = 20)
+den <- ggplot(iris, aes(x = Sepal.Length)) +
+  geom_density()
+
+hist + den
+```
+
+
+## Central point
+
+- Mean
+  - $\mu = n^{-1}\Sigma y_i = \Sigma p(y_i)y_i$
+
+```{r}
+mean(iris$Sepal.Length)
+```
+
+- Median
+  - Sort from min to max
+  - The observation in the middle is the median
+
+Median is robust to outliers
+  
+```{r}
+median(iris$Sepal.Length)
+```
+  
+## Quantiles/percentiles
+
+Median = second quantile = 50^th^ percentilef
+
+Other quantiles/percentiles are available
+
+```{r}
+quantile(iris$Sepal.Length, probs = c(0.25, 0.50, 0.75, 0.975))
+```
+
+```{r, fig.height = 3, fig.width = 4, echo = FALSE}
+ggplot(iris, aes(x = Sepal.Length)) +
+  geom_histogram(bins = 20) +
+  geom_vline(xintercept = quantile(iris$Sepal.Length, probs = c(0.25, 0.50, 0.75, 0.975)))
+```
+
+## Spread
+
+Spread of observations around a central point.
+
+- Absolute difference $s = \Sigma|y_i - \mu|$
+- Variance $s^2 = (n-1)^{-1}\Sigma (y_i - \mu)^2$
+  - mean squared difference around the mean
+- Standard deviation $s = \sqrt {s^2}$
+
+## Standard deviation $s = \sqrt{(n-1)^{-1}\Sigma (y_i - \mu)^2}$
+
+- $\mu \pm 1s$ = 68% of observations
+- $\mu \pm 1.96s$ = 95% of observations
+- $\mu \pm 1s$ point of inflection
+
+```{r, fig.height = 3, fig.width = 4, echo = FALSE}
+ggplot(iris, aes(x = Sepal.Length)) +
+  geom_histogram(bins = 20, aes(y = stat(density))) +
+  stat_function(fun = dnorm, args = list(mean = mean(iris$Sepal.Length), sd = sd(iris$Sepal.Length)), colour = "blue") +
+  geom_vline(xintercept = mean(iris$Sepal.Length) + c(1, -1) * sd(iris$Sepal.Length), colour = "red", linetype = "dashed") +
+  geom_vline(xintercept = mean(iris$Sepal.Length), colour = "red")
+```
+
+## Summary of data
+
+Five number summary
+```{r}
+summary(iris$Sepal.Length)
+```
+
+Standard deviation
+```{r}
+sqrt(var(iris$Sepal.Length))
+sd(iris$Sepal.Length)
+```
+
+## Standard deviation vs Standard error {.columns-2 .smaller}
+
+### Standard deviation
+
+$s = \sqrt{(n-1)^{-1}\Sigma (y_i - \mu)^2}$
+
+Spread of observations about mean
+
+$\mu \pm 1s$
+
+```{r, echo = FALSE}
+mean(iris$Sepal.Length) + c(-1, 1) * sd(iris$Sepal.Length)
+```
+
+Calculate with
+```{r, eval = FALSE}
+mean(x) + sd(x)
+mean(x) - sd(x)
+```
+
+
+
+### Standard error
+
+$se = s/\sqrt{n}$
+
+Uncertainty of mean
+
+$\mu \pm 1se$
+
+```{r, echo = FALSE}
+mean(iris$Sepal.Length) + c(-1, 1) * sd(iris$Sepal.Length) / sqrt(length(iris$Sepal.Length))
+```
+
+Need to calculate 
+
+```{r, eval = FALSE}
+mean(x) + sd(x) / sqrt(length(x))
+mean(x) - sd(x) / sqrt(length(x))
+```
+
+## Categorical Variables {.smaller}
+
+Best to represent as a factor (can set sort order)
+
+```{r}
+mpg <- mpg %>% mutate(class = factor(class))
+```
+
+Number of levels
+
+```{r}
+nlevels(mpg$class)
+```
+
+Frequency
+
+```{r}
+table(mpg$class)
+# or count() if column in data frame
+```
+
+```{r}
+table(mpg$class)
+# or count() if column in data frame
+```
+
+##
+
+```{r}
+ggplot(mpg, aes(x = class)) +
+  geom_bar()
+```
+
+# Bivariate EDA
+
+## Summaries of several variables {.columns-2}
+
+- Individual summaries
+- Combined summaries - measures of association
+  - covariance
+  - correlation
+  
+<p class="forceBreak"></p>
+
+```{r, fig.width = 3.5, fig.height = 5, echo = FALSE}
+g1 <- ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point()
+
+g2 <- g1 + aes(x = Sepal.Width, y = Sepal.Length)
+
+g1/g2
+
+```
+
+
+## Covariance
+
+Association between two variables
+
+$S_{xy} = \frac{\Sigma (x_i - \mu_x)(y_i - \mu_y)}{n - 1}$
+
+$S_{xy} = S_{yx}$
+
+- -inf, 0, +inf
+– + = positive association
+- - = negative association
+
+```{r}
+var(iris$Sepal.Length, iris$Sepal.Width)
+cov(iris$Sepal.Length, iris$Sepal.Width)
+```
+
+## Correlation {.smaller}
+
+Standardised association
+
+- -1, 0, +1
+- + = positive association
+- - = negative association
+
+- $S_{xy}$ - covariance 
+- $S_x^2$ - variance of x
+- $S_y^2$ - variance of y
+
+$r_{xy} = \frac{S_{xy}}{\sqrt{S_x^2S_y^2}}$
+
+$r_{xy} = r_{yx}$
+
+
+```{r}
+cor(iris$Sepal.Length, iris$Sepal.Width)
+```
+
+## Covariance vs Correlation {.columns-2 .smaller}
+
+### Covariance
+
+- -inf, 0, +inf
+- scale dependent
+- not testable
+
+<p class="forceBreak"></p>
+
+### Correlation
+
+- -1, 0, +1
+- scale independent
+- testable
+
+```{r}
+cor.test(iris$Sepal.Length, iris$Sepal.Width)
+```
+
+## Covariance and Correlation matrices
+
+```{r}
+df <- select(iris, Sepal.Width, Sepal.Length)
+var(df)
+```
+
+```{r}
+cor(df)
+```
+
+## Summary of functions used
+
+```{r eval = FALSE}
+summary()
+mean()
+median()
+var()
+sd()
+cor()
+cor.test()
+```
+
